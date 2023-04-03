@@ -29,6 +29,8 @@ blue_colours = [(255,217,4), (125,110,2)]
 
 shape_button_colours = [(20,200,200),(150,150,150)]
 
+mode_button_colours = [(20,200,200),(150,150,150)]
+
 red_selection = 0
 green_selection = 1
 blue_selection = 1
@@ -37,33 +39,42 @@ line_selection = 0
 rectangle_selection = 1
 circle_selection = 1
 
+draw_selection = 0
+erase_selection = 1
+
+
+def display_shape_buttons():
+    line = cv2.rectangle(img, (0,0), (90,75), shape_button_colours[line_selection], cv2.FILLED)
+    rectangle = cv2.rectangle(img, (105,0), (195,75), shape_button_colours[rectangle_selection], cv2.FILLED)
+    circle = cv2.rectangle(img, (210,0), (300,75), shape_button_colours[circle_selection], cv2.FILLED)
+    cv2.putText(line, "Line", (15, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(rectangle, "Rect", (115, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(circle, "Circle", (210, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
 
 def display_colour_buttons():
-    red = cv2.rectangle(img, (330,0), (430,75), red_colours[red_selection], cv2.FILLED)
-    green = cv2.rectangle(img, (440,0), (540,75), green_colours[green_selection], cv2.FILLED)
-    blue = cv2.rectangle(img, (550,0), (650,75), blue_colours[blue_selection], cv2.FILLED)
-    cv2.putText(red, "Red", (350, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
-    cv2.putText(green, "Green", (450, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
-    cv2.putText(blue, "Blue", (570, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    red = cv2.rectangle(img, (315,0), (405,75), red_colours[red_selection], cv2.FILLED)
+    green = cv2.rectangle(img, (420,0), (510,75), green_colours[green_selection], cv2.FILLED)
+    blue = cv2.rectangle(img, (525,0), (615,75), blue_colours[blue_selection], cv2.FILLED)
+    cv2.putText(red, "Red", (330, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(green, "Green", (420, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(blue, "Blue", (535, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
 
 def display_thickness_buttons():
-    cv2.rectangle(img, (550,100), (650,200), (0,0,0), cv2.FILLED)
-    cv2.rectangle(img, (550,210), (650,310), (200,200,200), cv2.FILLED)
+    increase = cv2.rectangle(img, (545,80), (635,155), (200,200,200), cv2.FILLED)
+    decrease = cv2.rectangle(img, (545,165), (635,230), (200,200,200), cv2.FILLED)
+    cv2.putText(increase, "+", (570, 120), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(decrease, "-", (570, 205), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
     
-def display_erase_button():
-    cv2.rectangle(img, (550,320), (650,420), (120,120,120), cv2.FILLED)
-
+def display_mode_buttons():
+    draw = cv2.rectangle(img, (545,240), (635,315), mode_button_colours[draw_selection], cv2.FILLED)
+    erase = cv2.rectangle(img, (545,325), (635,400), mode_button_colours[erase_selection], cv2.FILLED)
+    cv2.putText(draw, "Draw", (547, 280), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(erase, "Erase", (547, 365), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    
 def display_border_for_drawing_area():
     cv2.line(img, (0, 80), (540, 80), (0,0,0),4)
     cv2.line(img, (540, 80), (540, 800), (0,0,0),4)
 
-def display_shape_buttons():
-    line = cv2.rectangle(img, (10,0), (110,75), shape_button_colours[line_selection], cv2.FILLED)
-    rectangle = cv2.rectangle(img, (115,0), (215,75), shape_button_colours[rectangle_selection], cv2.FILLED)
-    circle = cv2.rectangle(img, (220,0), (320,75), shape_button_colours[circle_selection], cv2.FILLED)
-    cv2.putText(line, "Line", (20, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
-    cv2.putText(rectangle, "Rect", (125, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
-    cv2.putText(circle, "Circle", (230, 37), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
 
 def pressed_line_button(hand_position):
     global line_selection
@@ -73,7 +84,7 @@ def pressed_line_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 10 and x <= 110 ) and (y >= 0 and y <= 75):
+    if(x >= 0 and x <= 90 ) and (y >= 0 and y <= 75):
         pressed = True
         line_selection = 0
         rectangle_selection = 1
@@ -88,7 +99,7 @@ def pressed_rectangle_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 115 and x <= 215 ) and (y >= 0 and y <= 75):
+    if(x >= 105 and x <= 195 ) and (y >= 0 and y <= 75):
         pressed = True
         line_selection = 1
         rectangle_selection = 0
@@ -102,7 +113,7 @@ def pressed_circle_button(hand_position):
 
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
-    if(x >= 220 and x <= 320 ) and (y >= 0 and y <= 75):
+    if(x >= 210 and x <= 300) and (y >= 0 and y <= 75):
         pressed = True
         line_selection = 1
         rectangle_selection = 1
@@ -117,7 +128,7 @@ def pressed_red_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 330 and x <= 430 ) and (y >= 0 and y <= 75):
+    if(x >= 315 and x <= 405 ) and (y >= 0 and y <= 75):
         pressed = True
         red_selection = 0
         green_selection = 1
@@ -132,7 +143,7 @@ def pressed_green_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 440 and x <= 540 ) and (y >= 0 and y <= 75):
+    if(x >= 420 and x <= 510 ) and (y >= 0 and y <= 75):
         pressed = True
         red_selection = 1
         green_selection = 0
@@ -147,7 +158,7 @@ def pressed_blue_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 550 and x <= 650 ) and (y >= 0 and y <= 75):
+    if(x >= 525 and x <= 615 ) and (y >= 0 and y <= 75):
         pressed = True
         red_selection = 1
         green_selection = 1
@@ -170,12 +181,30 @@ def pressed_decrease_button(hand_position):
         pressed = True
     return pressed
 
-def pressed_erase_button(hand_position):
+def pressed_draw_button(hand_position):
+    global draw_selection
+    global erase_selection
+
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 550 and x <= 650 ) and (y >= 320 and y <= 420):
+    if(x >= 550 and x <= 650 ) and (y >= 310 and y <= 410):
         pressed = True
+        draw_selection = 0
+        erase_selection = 1
+    return pressed
+
+def pressed_erase_button(hand_position):
+    global draw_selection
+    global erase_selection
+
+    pressed = False
+    x, y = hand_position[0]['lmList'][4][:2]
+    #print(x)
+    if(x >= 550 and x <= 650 ) and (y >= 420 and y <= 520):
+        pressed = True
+        draw_selection = 1
+        erase_selection = 0
     return pressed
     
 def erase_screen(hand_position):
@@ -220,7 +249,7 @@ while True:
     display_colour_buttons()
     display_thickness_buttons()
     display_shape_buttons()
-    display_erase_button()
+    display_mode_buttons()
     display_border_for_drawing_area()
     #cv2.rectangle(img, (100,100), (200,200), (0,0,255), cv2.FILLED)
     
@@ -275,13 +304,19 @@ while True:
                     draw_mode = "rectangle"
                 elif pressed_circle_button(hand_position):
                     draw_mode = "circle"
+                elif pressed_draw_button(hand_position):
+                    mode_num = 0
+                    mode = modes[mode_num]
                 elif pressed_erase_button(hand_position): 
-                    if erase_button_counter == 5:
-                        mode_num = (mode_num + 1) %2
-                        mode =  modes[mode_num]
-                        print("Switch to "+ mode+" mode")
-                        erase_button_counter = 0
-                    erase_button_counter += 1
+                    mode_num = 1
+                    mode = modes[mode_num]
+
+                    #if erase_button_counter == 5:
+                    #    mode_num = (mode_num + 1) %2
+                    #    mode =  modes[mode_num]
+                    #    print("Switch to "+ mode+" mode")
+                    #    erase_button_counter = 0
+                    #erase_button_counter += 1
         else:
             if drawing_line and not_drawing == 10:
                 end_x, end_y = hand_position[0]['lmList'][4][:2]
