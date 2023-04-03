@@ -9,6 +9,7 @@ img2 = np.zeros((500, 680, 3), np.uint8)
 plus_sign = cv2.imread("plus.jpg", 0).resize((100,100))
 minus_sign = cv2.imread("minus.jpg", 0).resize((100,100))
 thickness = 3
+thickness_change = 1
 colour = (0,0,255)
 mode = "draw"
 mode_num = 0
@@ -62,8 +63,10 @@ def display_colour_buttons():
 def display_thickness_buttons():
     increase = cv2.rectangle(img, (545,80), (635,155), (200,200,200), cv2.FILLED)
     decrease = cv2.rectangle(img, (545,165), (635,230), (200,200,200), cv2.FILLED)
-    cv2.putText(increase, "+", (570, 120), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
-    cv2.putText(decrease, "-", (570, 205), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(increase, "+", (570, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(increase, str(thickness), (570, 140), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(decrease, "-", (570, 195), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(decrease, str(thickness), (570, 225), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
     
 def display_mode_buttons():
     draw = cv2.rectangle(img, (545,240), (635,315), mode_button_colours[draw_selection], cv2.FILLED)
@@ -83,8 +86,7 @@ def pressed_line_button(hand_position):
 
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
-    #print(x)
-    if(x >= 0 and x <= 90 ) and (y >= 0 and y <= 75):
+    if(x >= 0 and x <= 90 ) and (y >= 0 and y <= 75) and mode == "draw":
         pressed = True
         line_selection = 0
         rectangle_selection = 1
@@ -98,8 +100,7 @@ def pressed_rectangle_button(hand_position):
 
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
-    #print(x)
-    if(x >= 105 and x <= 195 ) and (y >= 0 and y <= 75):
+    if(x >= 105 and x <= 195 ) and (y >= 0 and y <= 75) and mode == "draw":
         pressed = True
         line_selection = 1
         rectangle_selection = 0
@@ -113,7 +114,7 @@ def pressed_circle_button(hand_position):
 
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
-    if(x >= 210 and x <= 300) and (y >= 0 and y <= 75):
+    if(x >= 210 and x <= 300) and (y >= 0 and y <= 75) and mode == "draw":
         pressed = True
         line_selection = 1
         rectangle_selection = 1
@@ -128,7 +129,7 @@ def pressed_red_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 315 and x <= 405 ) and (y >= 0 and y <= 75):
+    if(x >= 315 and x <= 405 ) and (y >= 0 and y <= 75) and mode == "draw":
         pressed = True
         red_selection = 0
         green_selection = 1
@@ -143,7 +144,7 @@ def pressed_green_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 420 and x <= 510 ) and (y >= 0 and y <= 75):
+    if(x >= 420 and x <= 510 ) and (y >= 0 and y <= 75) and mode == "draw":
         pressed = True
         red_selection = 1
         green_selection = 0
@@ -158,7 +159,7 @@ def pressed_blue_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 525 and x <= 615 ) and (y >= 0 and y <= 75):
+    if(x >= 525 and x <= 615 ) and (y >= 0 and y <= 75) and mode == "draw":
         pressed = True
         red_selection = 1
         green_selection = 1
@@ -168,8 +169,7 @@ def pressed_blue_button(hand_position):
 def pressed_increase_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
-    #print(x)
-    if(x >= 550 and x <= 650 ) and (y >= 100 and y <= 200):
+    if(x >= 545 and x <= 635 ) and (y >= 80 and y <= 155) and mode == "draw":
         pressed = True
     return pressed
 
@@ -177,7 +177,7 @@ def pressed_decrease_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 550 and x <= 650 ) and (y >= 210 and y <= 310):
+    if(x >= 545 and x <= 635 ) and (y >= 165 and y <= 230) and mode == "draw":
         pressed = True
     return pressed
 
@@ -188,7 +188,7 @@ def pressed_draw_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 550 and x <= 650 ) and (y >= 310 and y <= 410):
+    if(x >= 545 and x <= 635 ) and (y >= 240 and y <= 315):
         pressed = True
         draw_selection = 0
         erase_selection = 1
@@ -201,7 +201,7 @@ def pressed_erase_button(hand_position):
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
     #print(x)
-    if(x >= 550 and x <= 650 ) and (y >= 420 and y <= 520):
+    if(x >= 545 and x <= 635 ) and (y >= 325 and y <= 400):
         pressed = True
         draw_selection = 1
         erase_selection = 0
@@ -241,6 +241,9 @@ def hand_in_button_area(hand_position):
         in_button_area = True
     return in_button_area
 
+#def detect_triangle(drawing_img):
+
+
 while True:
     success, img = cap.read()
     img = cv2.flip(img, 1)
@@ -257,7 +260,7 @@ while True:
     cv2.resizeWindow("Capture Window", 800,600)
     cv2.imshow("Capture Window", img)
 
-    cv2.imshow("Second Window", img2)
+    cv2.imshow("Blackboard Window", img2)
 
     #if mode == "draw":
     if hand_position:
@@ -269,10 +272,6 @@ while True:
                     if draw_mode == "line" and drawing_line == False:
                         start_line = (x,y-80)
                         drawing_line = True
-                            #while(hand_in_drawing_position(hand_position)):
-                            #    continue
-                            #end_x, end_y = hand_position[0]['lmList'][12][:2]
-                            #cv2.line(img2, (x,y), (end_x, end_y), colour, thickness)
                     elif draw_mode == "rectangle" and drawing_rectangle == False:
                         start_line = (x,y-80)
                         drawing_rectangle = True
@@ -282,22 +281,26 @@ while True:
                         drawing_circle = True
                     elif draw_mode == "circle" and drawing_circle == True:
                         circle_radius = min(circle_radius+1, 200)
+                        #cv2.putText(img, "Circle Radius: "+str(circle_radius), (80,80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
                 elif mode == "erase":
                     erase_screen(hand_position)
             else:
                 if pressed_red_button(hand_position):
-                    print("RED")
                     colour = (0,0,255)
                 elif pressed_green_button(hand_position):
                     colour = (0,255,0)
                 elif pressed_blue_button(hand_position):
                     colour = (255,217,4)
                 elif pressed_increase_button(hand_position):
-                    thickness += 1
-                    print(thickness)
+                    thickness_change += 1
+                    increase_value = 1 if thickness_change % 5 == 0 else 0
+                    #thickness_change = (thickness_change % 2)
+                    thickness = min(100, thickness+increase_value)
                 elif pressed_decrease_button(hand_position):
-                    thickness = max(1, thickness-1)
-                    print(thickness)
+                    thickness_change += 1
+                    decrease_value = 1 if thickness_change % 5 == 0 else 0
+                    #thickness_change = (thickness_change % 2)
+                    thickness = max(1, thickness-decrease_value)
                 elif pressed_line_button(hand_position):
                     draw_mode = "line"
                 elif pressed_rectangle_button(hand_position):
@@ -310,23 +313,16 @@ while True:
                 elif pressed_erase_button(hand_position): 
                     mode_num = 1
                     mode = modes[mode_num]
-
-                    #if erase_button_counter == 5:
-                    #    mode_num = (mode_num + 1) %2
-                    #    mode =  modes[mode_num]
-                    #    print("Switch to "+ mode+" mode")
-                    #    erase_button_counter = 0
-                    #erase_button_counter += 1
         else:
-            if drawing_line and not_drawing == 10:
+            if drawing_line and not_drawing == 15:
                 end_x, end_y = hand_position[0]['lmList'][4][:2]
                 cv2.line(img2, start_line, (end_x, end_y-80), colour, thickness)
                 drawing_line = False
-            elif drawing_rectangle and not_drawing == 10:
+            elif drawing_rectangle and not_drawing == 15:
                 end_x, end_y = hand_position[0]['lmList'][4][:2]
                 cv2.rectangle(img2, start_line, (end_x, end_y-80), colour, thickness)
                 drawing_rectangle = False
-            elif drawing_circle and not_drawing == 10:
+            elif drawing_circle and not_drawing == 15:
                 cv2.circle(img2, start_line, circle_radius, colour, thickness)
                 drawing_circle = False
                 circle_radius = 1
