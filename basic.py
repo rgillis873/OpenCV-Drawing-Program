@@ -13,7 +13,7 @@ thickness_change = 1
 colour = (0,0,255)
 mode = "draw"
 mode_num = 0
-modes = ["draw", "erase"]
+modes = ["draw", "erase", "shapes"]
 draw_mode = "line"
 start_line = (0,0)
 end_line = (10,10)
@@ -23,6 +23,8 @@ drawing_circle = False
 circle_radius = 1
 erase_button_counter = 1
 not_drawing = 1
+displayed_detected = False
+old_img2 = None
 
 red_colours = [(0,0,255), (0,0,125)]
 green_colours = [(0,255,0), (0,125,0)]
@@ -42,6 +44,7 @@ circle_selection = 1
 
 draw_selection = 0
 erase_selection = 1
+shape_selection = 1
 
 
 def display_shape_buttons():
@@ -71,8 +74,10 @@ def display_thickness_buttons():
 def display_mode_buttons():
     draw = cv2.rectangle(img, (545,240), (635,315), mode_button_colours[draw_selection], cv2.FILLED)
     erase = cv2.rectangle(img, (545,325), (635,400), mode_button_colours[erase_selection], cv2.FILLED)
+    shapes = cv2.rectangle(img, (545,410), (635,500), mode_button_colours[shape_selection], cv2.FILLED)
     cv2.putText(draw, "Draw", (547, 280), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
     cv2.putText(erase, "Erase", (547, 365), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(shapes, "Shapes", (547, 450), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
     
 def display_border_for_drawing_area():
     cv2.line(img, (0, 80), (540, 80), (0,0,0),4)
@@ -184,6 +189,7 @@ def pressed_decrease_button(hand_position):
 def pressed_draw_button(hand_position):
     global draw_selection
     global erase_selection
+    global shape_selection
 
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
@@ -192,11 +198,13 @@ def pressed_draw_button(hand_position):
         pressed = True
         draw_selection = 0
         erase_selection = 1
+        shape_selection = 1
     return pressed
 
 def pressed_erase_button(hand_position):
     global draw_selection
     global erase_selection
+    global shape_selection
 
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
@@ -205,8 +213,24 @@ def pressed_erase_button(hand_position):
         pressed = True
         draw_selection = 1
         erase_selection = 0
+        shape_selection = 1
     return pressed
     
+def pressed_shape_detection_button(hand_position):
+    global draw_selection
+    global erase_selection
+    global shape_selection
+
+    pressed = False
+    x, y = hand_position[0]['lmList'][4][:2]
+    #print(x)
+    if(x >= 545 and x <= 635 ) and (y >= 410 and y <= 500):
+        pressed = True
+        draw_selection = 1
+        erase_selection = 1
+        shape_selection = 0
+    return pressed
+
 def erase_screen(hand_position):
     x, y = hand_position[0]['lmList'][4][:2]
     
@@ -242,6 +266,27 @@ def hand_in_button_area(hand_position):
     return in_button_area
 
 #def detect_triangle(drawing_img):
+
+
+    
+def detect_shapes(drawing_img):
+    #img = cv2.imread("triangles.png")
+    detection_img = drawing_img.copy()
+    gray_scale_img = cv2.cvtColor(detection_img, cv2.COLOR_BGR2GRAY)
+    blur_img = cv2.GaussianBlur(gray_scale_img, (3,3), 1,1)
+    ret, black_white_thresholded_img = cv2.threshold(blur_img, 1, 255, cv2.THRESH_BINARY)
+
+    contours, hierarchy = cv2.findContours(black_white_thresholded_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    for contour in contours:
+        approx_curve = cv2.approxPolyDP(contour, 3, True)
+        cv2.drawContours(detection_img, approx_curve, 0, (0,255,0), 3)
+
+        if len(approx_curve) == 3:
+            rect = cv2.boundingRect(contour)
+            cv2.rectangle(detection_img, (rect[0], rect[1]), (rect[0]+rect[2], rect[1]+rect[3]), (0, 255, 255), 3)
+            cv2.putText(detection_img, "Triangle", (rect[0]+(rect[2]//2), rect[1]+(rect[3]//2)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255))
+    return detection_img
 
 
 while True:
@@ -308,25 +353,40 @@ while True:
                 elif pressed_circle_button(hand_position):
                     draw_mode = "circle"
                 elif pressed_draw_button(hand_position):
+                    if mode_num == 2:
+                        img2 = old_img2
+                        displayed_detected = False
                     mode_num = 0
                     mode = modes[mode_num]
                 elif pressed_erase_button(hand_position): 
+                    if mode_num == 2:
+                        img2 = old_img2
+                        displayed_detected = False
                     mode_num = 1
                     mode = modes[mode_num]
+                elif pressed_shape_detection_button(hand_position):
+                    mode_num = 2
+                    mode = modes[mode_num]
+                    if not displayed_detected:
+                        old_img2 = img2
+                        img2 = detect_shapes(img2)
+                        displayed_detected = True
         else:
-            if drawing_line and not_drawing == 15:
-                end_x, end_y = hand_position[0]['lmList'][4][:2]
-                cv2.line(img2, start_line, (end_x, end_y-80), colour, thickness)
-                drawing_line = False
-            elif drawing_rectangle and not_drawing == 15:
-                end_x, end_y = hand_position[0]['lmList'][4][:2]
-                cv2.rectangle(img2, start_line, (end_x, end_y-80), colour, thickness)
-                drawing_rectangle = False
-            elif drawing_circle and not_drawing == 15:
-                cv2.circle(img2, start_line, circle_radius, colour, thickness)
-                drawing_circle = False
-                circle_radius = 1
-            not_drawing += 1
+            #if mode == "draw":
+
+                if drawing_line and not_drawing == 15:
+                    end_x, end_y = hand_position[0]['lmList'][4][:2]
+                    cv2.line(img2, start_line, (end_x, end_y-80), colour, thickness)
+                    drawing_line = False
+                elif drawing_rectangle and not_drawing == 15:
+                    end_x, end_y = hand_position[0]['lmList'][4][:2]
+                    cv2.rectangle(img2, start_line, (end_x, end_y-80), colour, thickness)
+                    drawing_rectangle = False
+                elif drawing_circle and not_drawing == 15:
+                    cv2.circle(img2, start_line, circle_radius, colour, thickness)
+                    drawing_circle = False
+                    circle_radius = 1
+                not_drawing += 1
 
                 
                 
