@@ -6,8 +6,9 @@ cap = cv2.VideoCapture(0)
 detector = HandDetector(maxHands = 1, detectionCon=0.8)
 img = cap.read()
 img2 = np.zeros((500, 675, 3), np.uint8)
-plus_sign = cv2.imread("plus.jpg", 0).resize((100,100))
-minus_sign = cv2.imread("minus.jpg", 0).resize((100,100))
+bobby_sticker = cv2.imread("bobby.png", 0)
+burns_sticker = cv2.imread("burns.png", 0)
+gus_sticker = cv2.imread("gus.png", 0)
 thickness = 3
 thickness_change = 1
 colour = (0,0,255)
@@ -20,6 +21,9 @@ end_line = (10,10)
 drawing_line = False
 drawing_rectangle = False
 drawing_circle = False
+drawing_bobby = False
+drawing_burns = False
+drawing_gus = False
 circle_radius = 1
 erase_button_counter = 1
 not_drawing = 1
@@ -42,6 +46,9 @@ blue_selection = 1
 line_selection = 0
 rectangle_selection = 1
 circle_selection = 1
+bobby_selection = 1
+burns_selection = 1
+gus_selection = 1
 
 draw_selection = 0
 erase_selection = 1
@@ -84,11 +91,21 @@ def display_border_for_drawing_area():
     cv2.line(img, (0, 100), (675, 100), (0,0,0),4)
     cv2.line(img, (675, 100), (675, 600), (0,0,0),4)
 
+def display_sticker_buttons():
+    bobby = cv2.rectangle(img, (800,0), (890,90), shape_button_colours[bobby_selection], cv2.FILLED)
+    burns = cv2.rectangle(img, (800,105), (890,195), shape_button_colours[burns_selection], cv2.FILLED)
+    gus = cv2.rectangle(img, (800,210), (890,300), shape_button_colours[gus_selection], cv2.FILLED)
+    cv2.putText(bobby, "Bobby", (800, 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(burns, "Burns", (800, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
+    cv2.putText(gus, "Gus", (810, 255), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))   
 
 def pressed_line_button(hand_position):
     global line_selection
     global rectangle_selection
     global circle_selection
+    global bobby_selection
+    global burns_selection
+    global gus_selection
 
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
@@ -97,12 +114,18 @@ def pressed_line_button(hand_position):
         line_selection = 0
         rectangle_selection = 1
         circle_selection = 1
+        bobby_selection = 1
+        burns_selection = 1
+        gus_selection = 1
     return pressed
 
 def pressed_rectangle_button(hand_position):
     global line_selection
     global rectangle_selection
     global circle_selection
+    global bobby_selection
+    global burns_selection
+    global gus_selection
 
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
@@ -111,12 +134,18 @@ def pressed_rectangle_button(hand_position):
         line_selection = 1
         rectangle_selection = 0
         circle_selection = 1
+        bobby_selection = 1
+        burns_selection = 1
+        gus_selection = 1
     return pressed
 
 def pressed_circle_button(hand_position):
     global line_selection
     global rectangle_selection
     global circle_selection
+    global bobby_selection
+    global burns_selection
+    global gus_selection
 
     pressed = False
     x, y = hand_position[0]['lmList'][4][:2]
@@ -125,7 +154,75 @@ def pressed_circle_button(hand_position):
         line_selection = 1
         rectangle_selection = 1
         circle_selection = 0
+        bobby_selection = 1
+        burns_selection = 1
+        gus_selection = 1
     return pressed
+
+
+def pressed_bobby_button(hand_position):
+    global line_selection
+    global rectangle_selection
+    global circle_selection
+    global bobby_selection
+    global burns_selection
+    global gus_selection
+
+    pressed = False
+    x, y = hand_position[0]['lmList'][4][:2]
+    if(x >= 800 and x <= 890 ) and (y >= 0 and y <= 90) and mode == "draw":
+        pressed = True
+        line_selection = 1
+        rectangle_selection = 1
+        circle_selection = 1
+        bobby_selection = 0
+        burns_selection = 1
+        gus_selection = 1
+    return pressed
+
+def pressed_burns_button(hand_position):
+    global line_selection
+    global rectangle_selection
+    global circle_selection
+    global bobby_selection
+    global burns_selection
+    global gus_selection
+
+    pressed = False
+    x, y = hand_position[0]['lmList'][4][:2]
+    if(x >= 800 and x <= 890 ) and (y >= 105 and y <= 195) and mode == "draw":
+        pressed = True
+        line_selection = 1
+        rectangle_selection = 1
+        circle_selection = 1
+        bobby_selection = 1
+        burns_selection = 0
+        gus_selection = 1
+    return pressed
+
+def pressed_gus_button(hand_position):
+    global line_selection
+    global rectangle_selection
+    global circle_selection
+    global bobby_selection
+    global burns_selection
+    global gus_selection
+
+    pressed = False
+    x, y = hand_position[0]['lmList'][4][:2]
+    if(x >= 800 and x <= 890) and (y >= 210 and y <= 300) and mode == "draw":
+        pressed = True
+        line_selection = 1
+        rectangle_selection = 1
+        circle_selection = 1
+        bobby_selection = 1
+        burns_selection = 1
+        gus_selection = 0
+    return pressed
+
+
+
+
 
 def pressed_red_button(hand_position):
     global red_selection
@@ -279,7 +376,8 @@ def detect_shapes(drawing_img):
 
     contours, hierarchy = cv2.findContours(black_white_thresholded_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    circles = cv2.HoughCircles(blur_img, cv2.HOUGH_GRADIENT, 1, 100,  param1=100, param2=30, minRadius=1, maxRadius=200)
+    circles = cv2.HoughCircles(blur_img, cv2.HOUGH_GRADIENT, 1, 100,  param1=100, param2=40, minRadius=1, maxRadius=200)
+    #circles = cv2.HoughCircles(blur_img, cv2.HOUGH_GRADIENT, 1, 100,  param1=100, param2=30, minRadius=1, maxRadius=200)
 
     for contour in contours:
         approx_curve = cv2.approxPolyDP(contour, 3, True)
@@ -301,17 +399,23 @@ def detect_shapes(drawing_img):
             center_x = circles[i][0]
             center_y = circles[i][1]
             radius = circles[i][2]  
-            cv2.rectangle(detection_img, (center_x-radius-2, center_y-radius-2), (center_x+radius-2, center_y+radius-2), (0,255,255), 3) 
+            cv2.rectangle(detection_img, (center_x-radius-2, center_y-radius-2), (center_x+radius+2, center_y+radius+2), (0,255,255), 3) 
             #cv2.rectangle(img, (center_x-radius-5, center_y-radius-5), (center_x+radius+5, center_y+radius+5), (0,255,255), 3)  
             #cv2.circle(img, (circles[i][0], circles[i][1]), circles[i][2], (0,255,255), 3)  
             cv2.putText(detection_img, "Circle",(circles[i][0], circles[i][1]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255))  
     return detection_img
 
+def add_sticker_img(main_img, sticker_img, x_coord, y_coord):
+    width = sticker_img.shape[0]
+    height = sticker_img.shape[1]
+    main_img[y_coord:y_coord+height, x_coord:x_coord+width, 3] = sticker_img
+    return main_img
+
 
 while True:
     success, img = cap.read()
     img = cv2.flip(img, 1)
-    img = cv2.resize(img, (800,600))
+    img = cv2.resize(img, (900,600))
     hand_position, img = detector.findHands(img, flipType=False)
 
     display_colour_buttons()
@@ -319,6 +423,7 @@ while True:
     display_shape_buttons()
     display_mode_buttons()
     display_border_for_drawing_area()
+    display_sticker_buttons()
     #cv2.rectangle(img, (100,100), (200,200), (0,0,255), cv2.FILLED)
     
     #cv2.namedWindow("Capture Window", cv2.WINDOW_NORMAL)
@@ -347,6 +452,15 @@ while True:
                         drawing_circle = True
                     elif draw_mode == "circle" and drawing_circle == True:
                         circle_radius = min(circle_radius+1, 200)
+                    elif draw_mode == "bobby" and drawing_bobby == False:
+                        start_line = (x,y-100)
+                        drawing_bobby = True
+                    elif draw_mode == "burns" and drawing_bobby == False:
+                        start_line = (x,y-100)
+                        drawing_burns = True
+                    elif draw_mode == "gus" and drawing_bobby == False:
+                        start_line = (x,y-100)
+                        drawing_gus = True
                         #cv2.putText(img, "Circle Radius: "+str(circle_radius), (80,80), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0))
                 elif mode == "erase":
                     erase_screen(hand_position)
@@ -373,6 +487,12 @@ while True:
                     draw_mode = "rectangle"
                 elif pressed_circle_button(hand_position):
                     draw_mode = "circle"
+                elif pressed_bobby_button(hand_position):
+                    draw_mode = "bobby"
+                elif pressed_burns_button(hand_position):
+                    draw_mode = "burns"
+                elif pressed_gus_button(hand_position):
+                    draw_mode = "gus"
                 elif pressed_draw_button(hand_position):
                     if mode_num == 2:
                         img2 = old_img2
@@ -407,6 +527,13 @@ while True:
                     cv2.circle(img2, start_line, circle_radius, colour, thickness)
                     drawing_circle = False
                     circle_radius = 1
+                elif drawing_bobby and not_drawing == 15:
+                    x_coord = start_line[0]-50
+                    y_coord = start_line[1]-50
+                    img = add_sticker_img(img, bobby_sticker, x_coord, y_coord)
+                    #cv2.circle(img2, start_line, circle_radius, colour, thickness)
+                    drawing_bobby = False
+                    
                 not_drawing += 1
 
                 
