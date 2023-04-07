@@ -1,7 +1,39 @@
 import cv2
 import numpy as np
 
-img = cv2.imread("scribbles.png")
+
+# Function carries out non max suppression on the image and returns the suppressed image
+def compute_nonmax_suppression_img(drawing_img):
+    rows, columns = drawing_img.shape[0], drawing_img.shape[1]
+    draw_copy_img = drawing_img.copy()
+
+    # For each pixel in the image, look at all of its neighbours in a 3x3 window. If any of its neighbours have a higher or equal 
+    # pixel value, set the current pixel value to 0
+    for i in range(0, rows):
+        for j in range(0, columns):
+            largest_value = True
+            if j-1 >= 0:
+                largest_value = draw_copy_img[i][j] > draw_copy_img[i][j-1]
+            if largest_value and j+1 < columns:
+                largest_value = draw_copy_img[i][j] > draw_copy_img[i][j+1]
+            if largest_value and i-1 >= 0:
+                largest_value = draw_copy_img[i][j] > draw_copy_img[i-1][j]
+            if largest_value and i+1 < rows:
+                largest_value = draw_copy_img[i][j] > draw_copy_img[i+1][j]
+            if largest_value and i-1 >= 0 and j-1 >= 0:
+                largest_value = draw_copy_img[i][j] > draw_copy_img[i-1][j-1]
+            if largest_value and i-1 >= 0 and j+1 < columns:
+                largest_value = draw_copy_img[i][j] > draw_copy_img[i-1][j+1]
+            if largest_value and i+1 < rows and j-1 >= 0:
+                largest_value = draw_copy_img[i][j] > draw_copy_img[i+1][j-1]
+            if largest_value and i+1 < rows and j+1 < columns:
+                largest_value = draw_copy_img[i][j] > draw_copy_img[i+1][j+1]
+            
+            if not largest_value:
+                draw_copy_img[i][j] = 0
+    return draw_copy_img 
+
+img = cv2.imread("bigtest.png")
 gray_scale_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 blur_img = cv2.GaussianBlur(gray_scale_img, (3,3), 1,1)
 ret, black_white_thresholded_img = cv2.threshold(blur_img, 1, 255, cv2.THRESH_BINARY)
@@ -27,9 +59,15 @@ for template in templates:
     gray_temp = cv2.cvtColor(temp_img, cv2.COLOR_BGR2GRAY)
     #ret, threshold_temp = cv2.threshold(gray_bobby, 1, 255, cv2.THRESH_BINARY)
     res = cv2.matchTemplate(blur_img, gray_temp, cv2.TM_CCOEFF_NORMED)
-    location = np.where(res >= 0.90)
+    #values = compute_nonmax_suppression_img(res)
+    #print(res)
+    location = np.where(res >= 0.80)
+    #print(location)
+    points = zip(*location[::-1])
+    print(tuple(points))
+    
 
-    for point in zip(*location[::-1]):
+    for point in points:
         cv2.rectangle(img,point, (point[0]+100, point[1]+100), (0,255,255), 1)
         cv2.putText(img, template, (point[0]+50, point[1]+50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255))
 
