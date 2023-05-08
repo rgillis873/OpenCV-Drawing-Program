@@ -1,12 +1,8 @@
-Name: Robert Gillis
-Student Number: 100900973
-
 What's included in this folder:
 Image of Bobby Hill used for sticker in drawing program named as: bobby.png
 Image of Mr. Burns used for sticker in drawing program named as: burns.png
 Image of Gus Griswald used for sticker in drawing program named as: gus.png
 The python file used to implement the drawing program named as: drawing.py
-Project report file name as: COMP4102-ProjectReport-RobGillis.pdf
 
 Link to video demo of the program:
 
@@ -76,12 +72,14 @@ Drawing Lines:
 To draw a line, place your hand in the drawing position at the area you want to start drawing the line from. Move your hand across the screen 
 with the thumb and index finger still pressed together until you reach the point where you want the line to end. Once you reach desired end point 
 for the line, release your thumb and index finger from each other. Where you leave your thumb is where the end of the line will be placed.
+![line_drawing](https://user-images.githubusercontent.com/59716448/236934340-d652dd81-abed-4041-907c-ff5c9b417ba4.gif)
 
 Drawing Rectangles:
 To draw a rectangle, place your hand in the drawing position at the area you want to start drawing the rectangle from. Move your hand across the screen 
 with the thumb and index finger still pressed together until you reach the point where you want to place the opposite corner of the rectangle. 
 Once you reach desired end point for rectangle, release your thumb and index finger from each other. Where you leave your thumb is where 
 the opposite corner of the rectangle will be placed.
+![rectangle_drawing](https://user-images.githubusercontent.com/59716448/236934623-9299852c-15e1-4666-b614-7887e46ee87c.gif)
 
 Drawing Circles:
 To draw a circle, place your hand in the drawing position at the area you want the center of the circle to be. The longer you hold your thumb and 
@@ -101,3 +99,4 @@ Shape Detection:
 To enter shape detection mode, press the shape button. The blackboard image will then change to have yellow bounding boxes drawn around any 
 triangles, circles or sticker images that are detected on the blackboard image. The shapes and stickers will also have a label to show 
 what they have been identified as.
+![shape_detection](https://user-images.githubusercontent.com/59716448/236934836-1a518176-c091-4e4f-9271-6e9891f4e265.gif)
