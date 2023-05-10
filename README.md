@@ -85,18 +85,21 @@ Drawing Circles:
 To draw a circle, place your hand in the drawing position at the area you want the center of the circle to be. The longer you hold your thumb and 
 index finger together at this point, the larger the circle that you draw will be. To finish drawing the circle, just release your thumb and index 
 finger.
+![circles_smaller](https://github.com/rgillis873/COMP4102-Project/assets/59716448/0ffe7e59-96a2-488c-bde6-a32c8f794d84)
 
 Drawing Stickers:
 To draw a sticker, similar to drawing circles, place your hand in the drawing position at the area where you want the center of the sticker to be.
 Then release your thumb and index finger to finish placing the sticker.
+![stickers_small_enough](https://github.com/rgillis873/COMP4102-Project/assets/59716448/14f269ba-9ec6-4eb7-9760-bc63433af2a1)
 
 Erasing:
 To erase things from the blackboard image, first press the erase button to switch to eraser mode. Then using the same hand position as you do 
 for drawing, move your thumb and index finger over the area you want to erase. It will erase a 100x100 pixel area around that point and turn 
 it back to black.
+![erasing_smaller](https://github.com/rgillis873/COMP4102-Project/assets/59716448/7d2d8e87-db32-4e87-9484-ba94a6452b3c)
 
 Shape Detection:
 To enter shape detection mode, press the shape button. The blackboard image will then change to have yellow bounding boxes drawn around any 
 triangles, circles or sticker images that are detected on the blackboard image. The shapes and stickers will also have a label to show 
 what they have been identified as.
-![shape_detection](https://user-images.githubusercontent.com/59716448/236934836-1a518176-c091-4e4f-9271-6e9891f4e265.gif)
+![shapes_smaller](https://github.com/rgillis873/COMP4102-Project/assets/59716448/2aee9172-e5c2-4c1e-938b-67a80e3eb6df)
