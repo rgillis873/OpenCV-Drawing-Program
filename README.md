@@ -4,10 +4,10 @@
 
 A drawing program that is controllable using one of your hands and a webcam. Allows you to draw, lines, circles, rectangles and place sticker images onto a secondary blackboard screen. Also features modes for erasing the blackboard and for shape detection on your drawn images.
 
-<img src = "https://github.com/rgillis873/COMP4102-Project/assets/59716448/150dee7e-696e-48d0-b5c7-9b3951af6dda" width = "600" height="300" >
+<img src = "https://github.com/rgillis873/OpenCV-Drawing-Program/assets/59716448/fe96c14f-bd00-421f-bb15-6653004eed33" width = "600" height="300" >
 <br />
 
-<img src = "https://github.com/rgillis873/COMP4102-Project/assets/59716448/2aee9172-e5c2-4c1e-938b-67a80e3eb6df" width = "600" height="300" >
+<img src = "https://github.com/rgillis873/OpenCV-Drawing-Program/assets/59716448/e33c9ed3-8756-40a0-8fb6-88de4944b6fe" width = "600" height="300" >
 
 ## Installing and Running the Program
 
@@ -117,14 +117,14 @@ To draw a circle, place your hand in the drawing position at the area you want t
 index finger together at this point, the larger the circle that you draw will be. To finish drawing the circle, just release your thumb and index 
 finger.
 
-![circles_smaller](https://github.com/rgillis873/COMP4102-Project/assets/59716448/0ffe7e59-96a2-488c-bde6-a32c8f794d84)
+![circles_smaller](https://github.com/rgillis873/OpenCV-Drawing-Program/assets/59716448/dd178475-6ad9-4656-86d9-977e6bd696db)
 
 #### Placing Stickers:
 
 To place a sticker, similar to drawing circles, place your hand in the drawing position at the area where you want the center of the sticker to be.
 Then release your thumb and index finger to finish placing the sticker.
 
-![stickers_small_enough](https://github.com/rgillis873/COMP4102-Project/assets/59716448/14f269ba-9ec6-4eb7-9760-bc63433af2a1)
+![stickers_small_enough](https://github.com/rgillis873/OpenCV-Drawing-Program/assets/59716448/30170c6e-9460-4921-a250-2bd61519f373)
 
 ## Erasing:
 
@@ -132,7 +132,7 @@ To erase things from the blackboard image, first press the erase button to switc
 for drawing, move your thumb and index finger over the area you want to erase. It will erase a 100x100 pixel area around that point and turn 
 it back to black.
 
-![erasing_smaller](https://github.com/rgillis873/COMP4102-Project/assets/59716448/7d2d8e87-db32-4e87-9484-ba94a6452b3c)
+![erasing_smaller](https://github.com/rgillis873/OpenCV-Drawing-Program/assets/59716448/1a66371e-b30d-4c16-951f-2f4b10638351)
 
 ## Shape Detection:
 
@@ -140,4 +140,4 @@ To enter shape detection mode, press the shape button. The blackboard image will
 triangles, circles or sticker images that are detected on the blackboard image. The shapes and stickers will also have a label to show 
 what they have been identified as.
 
-![shapes_smaller](https://github.com/rgillis873/COMP4102-Project/assets/59716448/2aee9172-e5c2-4c1e-938b-67a80e3eb6df)
+![shapes_smaller](https://github.com/rgillis873/OpenCV-Drawing-Program/assets/59716448/e33c9ed3-8756-40a0-8fb6-88de4944b6fe)
